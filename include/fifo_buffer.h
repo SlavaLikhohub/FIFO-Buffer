@@ -1,7 +1,6 @@
 #ifndef _FIFO_BUFFER_H_
 #define _FIFO_BUFFER_H_
 
-#include <bits/stdint-uintn.h>
 #include <stdint.h>
 #include <stdbool.h>
 
@@ -12,10 +11,15 @@ enum fifo_errors
 {
     /** Ok */
     FIFO_OK = 0,
+    /** Unknown error */
     FIFO_UNKNOWN_ERROR,
+    /** Buffer is full */
     FIFO_FULL,
+    /** Buffer is empty */
     FIFO_EMPTY,
+    /** Buffer is too small */
     FIFO_TOO_SMALL,
+    /** Buffer contains not enought elements */
     FIFO_NOT_ENOUGHT_ELEMENTS,
 };
 
@@ -34,7 +38,7 @@ struct fifo_buffer
     buff_int_t last_el;
 
     /** Flag that specifies if buffer is full */
-    bool is_full : 1;    
+    bool is_full;    
 
     /** Pointer to the memory where space of buffer is starting */
     void **start_addr;

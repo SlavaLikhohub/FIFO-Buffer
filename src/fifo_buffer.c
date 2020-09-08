@@ -9,7 +9,7 @@ static buff_int_t fifo_size(const struct fifo_buffer *buff)
     else
         el_left = buff->first_el - buff->last_el;
     
-    return buff->max_size - el_left;
+    return el_left;
 }
 
 /**
