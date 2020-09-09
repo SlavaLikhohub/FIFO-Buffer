@@ -5,6 +5,7 @@
 #include <stdbool.h>
 
 typedef uint32_t buff_int_t;
+typedef uint32_t stored_data_t;
 
 /** Error codes */
 enum fifo_errors 
@@ -41,7 +42,7 @@ struct fifo_buffer
     bool is_full;    
 
     /** Pointer to the memory where space of buffer is starting */
-    void **start_addr;
+    stored_data_t *start_addr;
 
     /** Pointer to the function that should be used to allocate memory */
     void *(*fifo_malloc)(buff_int_t N);
@@ -54,10 +55,10 @@ struct fifo_buffer fifo_init(buff_int_t max_size,
                              void *(*fifo_malloc)(buff_int_t N), 
                              void *(*fifo_free)(buff_int_t N));
 
-enum fifo_errors fifo_add_elements(struct fifo_buffer *buff, void *elements[], buff_int_t N);
+enum fifo_errors fifo_add_elements(struct fifo_buffer *buff, stored_data_t elements[], buff_int_t N);
 
-void *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N);
+stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N);
 
-void *fifo_read_element(struct fifo_buffer *buff);
+stored_data_t fifo_read_element(struct fifo_buffer *buff);
 
 #endif // _FIFO_BUFFER_H_

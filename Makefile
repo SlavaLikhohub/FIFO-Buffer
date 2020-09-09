@@ -20,7 +20,7 @@ CC := gcc
 
 .PHONY: all clean tidy run
 
-all: $(BUILDDIR)/$(TARGET_SHARED)
+all: |clear $(BUILDDIR)/$(TARGET_SHARED)
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
 	$(CC) -c $(CFLAGS)  -fpic $< -o $@
