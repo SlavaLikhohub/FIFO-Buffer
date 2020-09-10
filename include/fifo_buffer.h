@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include <stddef.h>
 
 #ifndef BUFF_INT_T
 #define BUFF_INT_T size_t
@@ -77,8 +78,8 @@ struct fifo_buffer fifo_init(buff_int_t max_size,
 
 enum fifo_errors fifo_add_elements(struct fifo_buffer *buff, stored_data_t elements[], buff_int_t N);
 
-stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N);
+stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N, enum fifo_errors *err);
 
-stored_data_t fifo_read_element(struct fifo_buffer *buff);
+stored_data_t fifo_read_element(struct fifo_buffer *buff, enum fifo_errors *err);
 
 #endif // _FIFO_BUFFER_H_

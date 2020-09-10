@@ -7,12 +7,7 @@ class TestFifoBuffer(unittest.TestCase):
         max_size = 50
         buff = F.FIFO_Buffer_py(max_size)
         self.assertTrue(1)
-       
-    def testInitNegative(self):
-        max_size = -50
-        with self.assertRaises(OverflowError):
-            buff = F.FIFO_Buffer_py(max_size)
-    
+         
     def testAdd(self):
         max_size = 50
         ell = [1, 3, 54]
@@ -67,6 +62,14 @@ class TestFifoBuffer(unittest.TestCase):
         ell = list(range(read))
         buff.add_elements(ell)
         self.assertTrue(1)
+    
+    def testReadFromEmpty(self):
+        max_size = 50
+        buff = F.FIFO_Buffer_py(max_size)
+        buff.add_elements([1])
+        buff.read_element()
+        with self.assertRaises(Exception):
+            buff.read_element()
     
     def testBigData(self):
         max_size = int(1e6) # Tested with 1e8

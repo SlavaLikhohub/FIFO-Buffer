@@ -2,6 +2,7 @@ from libc.stdint cimport *
 #from libc.stdbool cimport bool
 from libcpp cimport bool
 from libc.stdlib cimport malloc, free
+from libc.stddef cimport size_t
 from cpython.pycapsule cimport *
 
 cdef extern from "fifo_buffer.h":
@@ -23,8 +24,8 @@ cdef extern from "fifo_buffer.h":
         buff_int_t last_el
         bool is_full
         void **start_addr
-        void *(*fifo_malloc)(buff_int_t N)
-        void *(*fifo_free)(buff_int_t N)
+        void *(*fifo_malloc)(size_t N)
+        void *(*fifo_free)(size_t N)
 
     ctypedef void *(*fifo_malloc)(size_t N)
     ctypedef void (*fifo_free)(void *)
@@ -33,9 +34,9 @@ cdef extern from "fifo_buffer.h":
     
     cdef fifo_errors fifo_add_elements(fifo_buffer *buff, stored_data_t elements[], buff_int_t N)
 
-    cdef stored_data_t *fifo_read_elements(fifo_buffer *buff, buff_int_t N)
+    cdef stored_data_t *fifo_read_elements(fifo_buffer *buff, buff_int_t N, fifo_errors *err)
 
-    cdef stored_data_t fifo_read_element(fifo_buffer *buff)
+    cdef stored_data_t fifo_read_element(fifo_buffer *buff, fifo_errors *err)
 
 
 '''
@@ -97,8 +98,13 @@ class FIFO_Buffer_py:
         
     def read_elements(self, buff_int_t N):
         cdef fifo_buffer *buff = get_obj_ptr(self)
-        cdef stored_data_t *result = fifo_read_elements(buff, N)
-
+        
+        cdef fifo_errors err = fifo_errors.FIFO_OK
+        cdef stored_data_t *result = fifo_read_elements(buff, N, &err)
+        
+        if err != fifo_errors.FIFO_OK:
+            raise FIFO_exeption(err, "Read elements")
+        
         py_arr = []
         for i in range(N):
             py_arr.append(<size_t>result[i])
@@ -109,8 +115,13 @@ class FIFO_Buffer_py:
 
     def read_element(self):
         cdef fifo_buffer *buff = get_obj_ptr(self)
-        cdef stored_data_t result = fifo_read_element(buff)
-
+        
+        cdef fifo_errors err = fifo_errors.FIFO_OK
+        cdef stored_data_t result = fifo_read_element(buff, &err)
+        
+        if err != fifo_errors.FIFO_OK:
+            raise FIFO_exeption(err, "Read elements")
+        
         return <size_t>result
     
     def print(self):

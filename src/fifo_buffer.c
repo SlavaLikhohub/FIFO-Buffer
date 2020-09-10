@@ -80,13 +80,17 @@ enum fifo_errors fifo_add_elements(struct fifo_buffer *buff, stored_data_t eleme
  *
  * :param buff: Pointer to the buffer :c:type:`fifo_buffer`.
  * :param N: Number of elements to read.
+ * :param err: Status variable. 
+ *      After execution it holds error code acording to :c:type:`fifo_errors`.
  * :return: Array of pointer that was read from the buffer or **NULL** if reading failed.
  *      Array located in a **HEAP** and should be freed after using.
  */
-stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N)
+stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N, enum fifo_errors *err)
 {
-    if (fifo_size(buff) < N || N == 0)
+    if (fifo_size(buff) < N || N == 0) {
+        *err = FIFO_NOT_ENOUGHT_ELEMENTS;
         return NULL;
+    }
     
     stored_data_t *result = buff->fifo_malloc(N * sizeof(N));
     for (buff_int_t i = 0; i < N; i++) {
@@ -97,6 +101,7 @@ stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N)
     buff->first_el = (buff->first_el + N) % buff->max_size;
     buff->is_full = 0;
     
+    *err = FIFO_OK;
     return result;
 }
 
@@ -104,17 +109,22 @@ stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N)
  * Read **1** element from the buffer
  *
  * :param buff: Pointer to the buffer :c:type:`fifo_buffer`.
+ * :param err: Status variable. 
+ *      After execution it holds error code acording to :c:type:`fifo_errors`.
  * :return: Pointer that was read from the buffer or **NULL** if reading failed.
  */
-stored_data_t fifo_read_element(struct fifo_buffer *buff)
+stored_data_t fifo_read_element(struct fifo_buffer *buff, enum fifo_errors *err)
 {
-    if (fifo_size(buff) == 0)
+    if (fifo_size(buff) == 0) {
+        *err = FIFO_EMPTY;
         return NULL;
+    }
     
     stored_data_t result = buff->start_addr[buff->first_el];
     buff_int_t buff_i = (buff->first_el + 1) % buff->max_size;
     buff->first_el = buff_i;
 
     buff->is_full = 0;
+    *err = FIFO_OK;
     return result;
 }
