@@ -4,8 +4,28 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-typedef uint32_t buff_int_t;
-typedef uint32_t stored_data_t;
+#ifndef BUFF_INT_T
+#define BUFF_INT_T size_t
+#endif
+/** 
+ * Data type that used for navigating over the buffer (default size_t).
+ * To redefine this define **BUFF_INT_T** while compilation:
+ *
+ * **-D BUFF_INT_T=<desired type>**
+ */
+typedef BUFF_INT_T buff_int_t;
+
+
+#ifndef BUFF_STORED_T
+#define BUFF_STORED_T uint32_t
+#endif
+/**
+ * Data type that is stored by the buffer (default uint32_t).
+ * To redefine this define **BUFF_STORED_TYPE** while compilation:
+ *
+ * **-D BUFF_STORED_TYPE=<desired type>**
+ */
+typedef BUFF_STORED_T stored_data_t;
 
 /** Error codes */
 enum fifo_errors 
@@ -45,15 +65,15 @@ struct fifo_buffer
     stored_data_t *start_addr;
 
     /** Pointer to the function that should be used to allocate memory */
-    void *(*fifo_malloc)(buff_int_t N);
+    void *(*fifo_malloc)(size_t N);
 
     /** Pointer to the function that should be used to free memory */
-    void *(*fifo_free)(buff_int_t N);
+    void *(*fifo_free)(size_t N);
 };
 
 struct fifo_buffer fifo_init(buff_int_t max_size, 
-                             void *(*fifo_malloc)(buff_int_t N), 
-                             void *(*fifo_free)(buff_int_t N));
+                             void *(*fifo_malloc)(size_t N), 
+                             void *(*fifo_free)(size_t N));
 
 enum fifo_errors fifo_add_elements(struct fifo_buffer *buff, stored_data_t elements[], buff_int_t N);
 

@@ -17,13 +17,13 @@ static buff_int_t fifo_size(const struct fifo_buffer *buff)
  * Initialize the FIFO buffer
  *
  * :param max_size: Capacity of a buffer.
- * :param fifo_malloc: Pointer to the function that should be used to allocate memory
- * :param fifo_free: Pointer to the function that should be used to free memory
+ * :param fifo_malloc: Pointer to the function that should be used to allocate memory (**malloc** is the most common)
+ * :param fifo_free: Pointer to the function that should be used to free memory (**free** is the most common)
  * :return: Initialized buffer :c:type:`fifo_buffer`.
  */
 struct fifo_buffer fifo_init(buff_int_t max_size, 
-                             void *(*fifo_malloc)(buff_int_t N), 
-                             void *(*fifo_free)(buff_int_t N))
+                             void *(*fifo_malloc)(size_t N), 
+                             void *(*fifo_free)(size_t N))
 {
     struct fifo_buffer buff;
 
