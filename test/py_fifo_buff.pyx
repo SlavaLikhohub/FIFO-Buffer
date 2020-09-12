@@ -8,7 +8,7 @@ from cpython.pycapsule cimport *
 cdef extern from "fifo_buffer.h":
     ctypedef uint32_t buff_int_t
     
-    ctypedef uint32_t stored_data_t
+    ctypedef uint16_t stored_data_t
 
     cpdef enum fifo_errors:
         FIFO_OK = 0,

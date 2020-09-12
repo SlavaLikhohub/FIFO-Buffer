@@ -6,10 +6,12 @@ BUILD_DIR = build
 SRC_LIB = ../src
 SRC_FILES = fifo_buffer.c
 
+FIFO_DATA_TYPE = uint16_t
+
 CC = gcc
 
 CFLAGS := -shared -pthread -fPIC -fwrapv -O2 -Wall -fno-strict-aliasing \
-		  $(addprefix -I,$(INCLUDE))
+		  $(addprefix -I,$(INCLUDE)) -D BUFF_STORED_T=$(FIFO_DATA_TYPE)
 
 all: $(TARGET).so
 

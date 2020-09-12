@@ -1,32 +1,40 @@
 DEBUG ?= 0
-TARGET := fifo_buffer
-TARGET_SHARED := $(TARGET).sh
+TARGET_FIFO := libfifo
+TARGET_SHARED := $(TARGET_FIFO).sh
+TARGET_STATIC := $(TARGET_FIFO).a
 SRCDIR = ./src
 INCDIRS = ./include
 
 SRCS = fifo_buffer.c
 
-LIBS = 
+BUILDDIR = .build/
 
-BUILDDIR = .build
+AR ?= ar
+CC ?= gcc
 
-
-CFLAGS = -O2 -std=gnu17 -Wall -Wextra -Wpedantic
-CFLAGS += $(addprefix -I,$(INCDIRS))
-CFLAGS += $(shell pkg-config --cflags $(LIBS))
-CFLAGS += -DDEBUG=$(DEBUG)
+CFLAGS ?= -O2 -std=gnu17 -Wall -Wextra -Wpedantic
+ARFLAGS ?= rcs
+INCL := $(addprefix -I,$(INCDIRS)) 
+DEF  := -DDEBUG=$(DEBUG)
 LDFLAGS = $(shell pkg-config --libs $(LIBS)) -Wl,--as-needed
-CC := gcc
 
-.PHONY: all clean tidy run
 
-all: |clear $(BUILDDIR)/$(TARGET_SHARED)
+.PHONY: all clean shared static static_stm32
+
+all: shared
+
+shared : $(BUILDDIR)/$(TARGET_SHARED)
+
+static_stm32 : $(BUILDDIR)/$(TARGET_STATIC)
+
+$(BUILDDIR)/$(TARGET_STATIC): $(addprefix $(BUILDDIR)/,$(SRCS:.c=.o))
+	$(AR) -rcs $@ $^
 
 $(BUILDDIR)/%.o: $(SRCDIR)/%.c | $(BUILDDIR)
-	$(CC) -c $(CFLAGS)  -fpic $< -o $@
+	$(CC) $(CFLAGS) $(INCL) -c $< -o $@
 
 $(BUILDDIR)/$(TARGET_SHARED): $(addprefix $(BUILDDIR)/,$(SRCS:.c=.o))
-	$(CC) -shared $(CFLAGS) $(LDFLAGS) $^ -o $@
+	$(CC) -shared $(CFLAGS) $(INCL) $(DEF) $(LDFLAGS) $^ -o $@
 
 $(BUILDDIR):
 	mkdir -p $@
@@ -34,5 +42,3 @@ $(BUILDDIR):
 clean:
 	-rm -rf $(BUILDDIR)
 
-tidy: clean
-	-rm -f $(TARGET_SHARED)

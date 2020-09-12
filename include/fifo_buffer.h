@@ -12,7 +12,7 @@
  * Data type that used for navigating over the buffer (default size_t).
  * To redefine this define **BUFF_INT_T** while compilation:
  *
- * **-D BUFF_INT_T=<desired type>**
+ * **-DBUFF_INT_T=<desired type>**
  */
 typedef BUFF_INT_T buff_int_t;
 
@@ -24,7 +24,7 @@ typedef BUFF_INT_T buff_int_t;
  * Data type that is stored by the buffer (default uint32_t).
  * To redefine this define **BUFF_STORED_TYPE** while compilation:
  *
- * **-D BUFF_STORED_TYPE=<desired type>**
+ * **-DBUFF_STORED_TYPE=<desired type>**
  */
 typedef BUFF_STORED_T stored_data_t;
 

@@ -82,7 +82,7 @@ enum fifo_errors fifo_add_elements(struct fifo_buffer *buff, stored_data_t eleme
  * :param N: Number of elements to read.
  * :param err: Status variable. 
  *      After execution it holds error code acording to :c:type:`fifo_errors`.
- * :return: Array of pointer that was read from the buffer or **NULL** if reading failed.
+ * :return: Array of elements that was read from the buffer or **NULL** if reading failed.
  *      Array located in a **HEAP** and should be freed after using.
  */
 stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N, enum fifo_errors *err)
@@ -111,7 +111,7 @@ stored_data_t *fifo_read_elements(struct fifo_buffer *buff, buff_int_t N, enum f
  * :param buff: Pointer to the buffer :c:type:`fifo_buffer`.
  * :param err: Status variable. 
  *      After execution it holds error code acording to :c:type:`fifo_errors`.
- * :return: Pointer that was read from the buffer or **NULL** if reading failed.
+ * :return: Element that was read from the buffer or **NULL** if reading failed.
  */
 stored_data_t fifo_read_element(struct fifo_buffer *buff, enum fifo_errors *err)
 {

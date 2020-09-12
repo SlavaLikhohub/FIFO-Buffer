@@ -72,7 +72,7 @@ class TestFifoBuffer(unittest.TestCase):
             buff.read_element()
     
     def testBigData(self):
-        max_size = int(1e6) # Tested with 1e8
+        max_size = int(1e4) # Tested with 1e8 with uint32_t
         ell = list(range(max_size))
         buff = F.FIFO_Buffer_py(max_size)
         buff.add_elements(ell)
